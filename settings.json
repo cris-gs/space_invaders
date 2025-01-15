@@ -1,0 +1,30 @@
+{
+    "keybindings": {
+        "move_up": "w",
+        "move_down": "s",
+        "move_left": "a",
+        "move_right": "d",
+        "shoot": "space",
+        "exit": "esc"
+    },
+    "volume": {
+        "master": 0.5,
+        "music": 0.5,
+        "sfx": 0.5
+    },
+    "default_settings": {
+        "keybindings": {
+            "move_up": "w",
+            "move_down": "s",
+            "move_left": "a",
+            "move_right": "d",
+            "shoot": "space",
+            "exit": "esc"
+        },
+        "volume": {
+            "master": 0.5,
+            "music": 0.5,
+            "sfx": 0.5
+        }
+    }
+}
