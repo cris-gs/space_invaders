@@ -2,6 +2,7 @@
 *.py[cod]               # Archivos compilados de Python
 *$py.class               # Archivos de caché de Python
 __pycache__/            # Directorios de caché de Python
+__pycache__
 
 # Entornos virtuales
 env/                     # Directorios de entornos virtuales
