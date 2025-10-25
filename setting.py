@@ -1,5 +1,7 @@
 import json
 
+SETTINGS_FILE = "settings.json"
+
 class Setting:
     def read_settings(self) -> dict:
         """
@@ -9,7 +11,7 @@ class Setting:
         - dict: The settings.
         """
         settings = {}
-        with open("space_invaders/settings.json", "r") as file:
+        with open(SETTINGS_FILE, "r") as file:
             settings = json.load(file)
         return settings
 
@@ -21,7 +23,7 @@ class Setting:
         - dict: The keybindings.
         """
         keybindings = {}
-        with open("space_invaders/settings.json", "r") as file:
+        with open(SETTINGS_FILE, "r") as file:
             settings = json.load(file)
             keybindings = settings['keybindings']
         return keybindings
@@ -33,6 +35,6 @@ class Setting:
         Args:
         - settings (dict): The settings.
         """
-        with open('space_invaders/settings.json', 'w') as f:
+        with open(SETTINGS_FILE, 'w') as f:
             for key, value in settings.items():
                 f.write(f'{key}={value}\n')
