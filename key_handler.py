@@ -1,4 +1,4 @@
-from actions import Actions
+from game_actions import GameActions
 from pynput import keyboard
 
 SPECIAL_KEYS_MAP = {
@@ -12,7 +12,7 @@ SPECIAL_KEYS_MAP = {
 }
 
 class KeyHandler:
-    def __init__(self, keybindings: dict, actions: Actions) -> None:
+    def __init__(self, keybindings: dict, game_actions: GameActions) -> None:
         """
         Initialize the KeyHandler class.
 
@@ -25,14 +25,14 @@ class KeyHandler:
                     "move_right": "d",
                     "shoot": "space"
                 }
-        - actions (Actions): An instance of the Actions class.
+        - game_actions (GameActions): An instance of the GameActions class.
         """
 
         self.bindings = {
             action: self._get_key(key)
             for action, key in keybindings.items()
         }
-        self.actions = actions
+        self.game_actions = game_actions
 
     def _get_key(self, key: str) -> keyboard.Key:
         """
@@ -71,7 +71,7 @@ class KeyHandler:
         """
         for action, action_key in self.bindings.items():
             if self._match_key(key, action_key):
-                action_method = getattr(self.actions, action, None)
+                action_method = getattr(self.game_actions, action, None)
                 if action_method:
                     action_method("press")
 
@@ -88,6 +88,6 @@ class KeyHandler:
 
         for action, action_key in self.bindings.items():
             if self._match_key(key, action_key):
-                action_method = getattr(self.actions, action, None)
+                action_method = getattr(self.game_actions, action, None)
                 if action_method:
                     action_method("release")
