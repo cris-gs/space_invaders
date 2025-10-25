@@ -57,10 +57,9 @@ class KeyHandler:
         Returns:
         - bool: True if they match, False otherwise.
         """
-        if isinstance(action_key, keyboard.Key):
-            return key == action_key
-        else:
+        if isinstance(action_key, str) and hasattr(key, "char"):
             return key.char == action_key
+        return key == action_key
 
     def on_press(self, key) -> None:
         """
