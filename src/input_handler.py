@@ -18,7 +18,11 @@ class InputHandler:
         self.game_actions = game_actions
 
     def start_listener(self):
-        with keyboard.Listener(on_press=self._on_press, on_release=self._on_release) as listener:
+        with keyboard.Listener(
+            on_press=self._on_press,
+            on_release=self._on_release,
+            suppress=True,
+        ) as listener:
             listener.join()
 
     def _get_key(self, key: str):
