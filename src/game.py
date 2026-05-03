@@ -1,4 +1,3 @@
-import threading
 import time
 import random
 import json
@@ -103,8 +102,7 @@ class Game:
         self.renderer = Renderer(self.state.width, self.state.height)
 
     def run(self) -> None:
-        listener_thread = threading.Thread(target=self.input_handler.start_listener, daemon=True)
-        listener_thread.start()
+        self.input_handler.start_listener()
 
         while self.state.running:
             if self.state.mode == "menu":
@@ -120,6 +118,7 @@ class Game:
             print(self.state.game_over_message)
 
     def _handle_menu(self) -> None:
+        self.input_handler.stop_listener()
         while self.state.running and self.state.mode == "menu":
             self._print_menu()
             choice = input("Select an option: ").strip()
@@ -135,6 +134,8 @@ class Game:
             else:
                 print("Invalid option. Press Enter to continue.")
                 input()
+        if self.state.running:
+            self.input_handler.start_listener()
 
     def _print_menu(self) -> None:
         from src.ui.terminal import clear_screen

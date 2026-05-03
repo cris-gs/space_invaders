@@ -16,14 +16,23 @@ class InputHandler:
     def __init__(self, keybindings: dict, game_actions) -> None:
         self.bindings = {action: self._get_key(key) for action, key in keybindings.items()}
         self.game_actions = game_actions
+        self.listener = None
 
     def start_listener(self):
-        with keyboard.Listener(
+        if self.listener and self.listener.running:
+            return
+
+        self.listener = keyboard.Listener(
             on_press=self._on_press,
             on_release=self._on_release,
             suppress=True,
-        ) as listener:
-            listener.join()
+        )
+        self.listener.start()
+
+    def stop_listener(self):
+        if self.listener:
+            self.listener.stop()
+            self.listener = None
 
     def _get_key(self, key: str):
         return SPECIAL_KEYS_MAP.get(key, key)
