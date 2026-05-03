@@ -11,6 +11,7 @@ Juego de Space Invaders en terminal hecho con Python.
 - `src/entities/`: entidades del juego.
 - `src/logic/`: movimiento, acciones y colisiones.
 - `src/config.py` y `settings.json`: configuracion.
+- Los enemigos aparecen en una formacion mas grande y cambian de posicion en cada partida.
 
 ## Controles
 

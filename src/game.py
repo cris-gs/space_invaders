@@ -1,5 +1,6 @@
 import threading
 import time
+import random
 
 from src.config import Config
 from src.entities.bullet import Bullet
@@ -16,10 +17,19 @@ class GameState:
         self.width = width
         self.height = height
         self.player = Player(width // 2, height - 1)
-        self.enemies = [Enemy(5, 2), Enemy(10, 2), Enemy(15, 2)]
+        self.enemies = self._create_enemies()
         self.bullets: list[Bullet] = []
         self.running = True
         self.score = 0
+
+    def _create_enemies(self) -> list[Enemy]:
+        columns = list(range(2, self.width - 1, 2))
+        rows = list(range(1, min(5, self.height // 2)))
+        spawn_points = [(x, y) for y in rows for x in columns]
+        enemy_count = min(12, len(spawn_points))
+
+        selected_positions = random.sample(spawn_points, enemy_count)
+        return [Enemy(x, y) for x, y in selected_positions]
 
     def update(self) -> None:
         updated_bullets: list[Bullet] = []
