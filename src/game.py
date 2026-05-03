@@ -23,6 +23,8 @@ class GameState:
         self.running = True
         self.mode = "playing"
         self.score = 0
+        self.max_ammo = 20
+        self.ammo = self.max_ammo
         self.game_over_message = ""
 
     def _create_enemies(self) -> list[Enemy]:
@@ -62,16 +64,20 @@ class GameState:
         self.enemies = [enemy for enemy in self.enemies if enemy.alive]
 
         if not self.enemies:
-            self.running = False
-            self.game_over_message = "You cleared all enemies."
+            self.end_game("You cleared all enemies.")
 
     def shoot(self) -> None:
         if self.mode != "playing":
+            return
+        if self.ammo <= 0:
             return
 
         bullet_y = self.player.y - 1
         if bullet_y >= 0:
             self.bullets.append(Bullet(self.player.x, bullet_y))
+            self.ammo -= 1
+            if self.ammo == 0:
+                self.end_game("You ran out of ammo.")
 
     def request_menu(self) -> None:
         self.mode = "menu"
@@ -80,7 +86,10 @@ class GameState:
         self.mode = "playing"
 
     def exit_game(self, message: str = "Game exited from menu.") -> None:
-        self.game_over_message = message
+        self.end_game(message)
+
+    def end_game(self, message: str) -> None:
+        self.game_over_message = f"{message} Total points: {self.score}"
         self.running = False
 
 
@@ -109,7 +118,6 @@ class Game:
         print()
         if self.state.game_over_message:
             print(self.state.game_over_message)
-        print(f"Final score: {self.state.score}")
 
     def _handle_menu(self) -> None:
         while self.state.running and self.state.mode == "menu":
@@ -144,6 +152,7 @@ class Game:
         clear_screen()
         print("=== SUMMARY ===")
         print(f"Score: {self.state.score}")
+        print(f"Ammo: {self.state.ammo}/{self.state.max_ammo}")
         print(f"Enemies remaining: {len(self.state.enemies)}")
         print(f"Bullets on screen: {len(self.state.bullets)}")
         print(f"Mode: {self.state.mode}")

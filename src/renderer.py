@@ -34,7 +34,16 @@ class Renderer:
         self.draw_enemies(game_state.enemies)
         self.draw_bullets(game_state.bullets)
         clear_screen()
+        self._print_border_top()
         for row in self.canvas:
-            print("".join(row))
+            print(f"|{''.join(row)}|")
+        self._print_border_bottom()
         print()
         print(f"Score: {game_state.score}")
+        print(f"Ammo: {game_state.ammo}/{game_state.max_ammo}")
+
+    def _print_border_top(self):
+        print(f"+{'-' * self.width}+")
+
+    def _print_border_bottom(self):
+        print(f"+{'-' * self.width}+")
