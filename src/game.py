@@ -1,6 +1,7 @@
 import threading
 import time
 import random
+import json
 
 from src.config import Config
 from src.entities.bullet import Bullet
@@ -20,7 +21,9 @@ class GameState:
         self.enemies = self._create_enemies()
         self.bullets: list[Bullet] = []
         self.running = True
+        self.mode = "playing"
         self.score = 0
+        self.game_over_message = ""
 
     def _create_enemies(self) -> list[Enemy]:
         columns = list(range(2, self.width - 1, 2))
@@ -32,6 +35,9 @@ class GameState:
         return [Enemy(x, y) for x, y in selected_positions]
 
     def update(self) -> None:
+        if self.mode != "playing":
+            return
+
         updated_bullets: list[Bullet] = []
 
         for bullet in self.bullets:
@@ -57,11 +63,25 @@ class GameState:
 
         if not self.enemies:
             self.running = False
+            self.game_over_message = "You cleared all enemies."
 
     def shoot(self) -> None:
+        if self.mode != "playing":
+            return
+
         bullet_y = self.player.y - 1
         if bullet_y >= 0:
             self.bullets.append(Bullet(self.player.x, bullet_y))
+
+    def request_menu(self) -> None:
+        self.mode = "menu"
+
+    def resume(self) -> None:
+        self.mode = "playing"
+
+    def exit_game(self, message: str = "Game exited from menu.") -> None:
+        self.game_over_message = message
+        self.running = False
 
 
 class Game:
@@ -78,9 +98,62 @@ class Game:
         listener_thread.start()
 
         while self.state.running:
+            if self.state.mode == "menu":
+                self._handle_menu()
+                continue
+
             self.state.update()
             self.renderer.render(self.state)
             time.sleep(0.1)
 
         print()
-        print(f"Ganaste. Score final: {self.state.score}")
+        if self.state.game_over_message:
+            print(self.state.game_over_message)
+        print(f"Final score: {self.state.score}")
+
+    def _handle_menu(self) -> None:
+        while self.state.running and self.state.mode == "menu":
+            self._print_menu()
+            choice = input("Select an option: ").strip()
+
+            if choice == "1":
+                self.state.resume()
+            elif choice == "2":
+                self._show_summary()
+            elif choice == "3":
+                self._show_configuration()
+            elif choice == "4":
+                self.state.exit_game()
+            else:
+                print("Invalid option. Press Enter to continue.")
+                input()
+
+    def _print_menu(self) -> None:
+        from src.ui.terminal import clear_screen
+
+        clear_screen()
+        print("=== PAUSE MENU ===")
+        print("1. Resume")
+        print("2. Summary")
+        print("3. Configuration")
+        print("4. Exit")
+
+    def _show_summary(self) -> None:
+        from src.ui.terminal import clear_screen
+
+        clear_screen()
+        print("=== SUMMARY ===")
+        print(f"Score: {self.state.score}")
+        print(f"Enemies remaining: {len(self.state.enemies)}")
+        print(f"Bullets on screen: {len(self.state.bullets)}")
+        print(f"Mode: {self.state.mode}")
+        input("\nPress Enter to return to the menu...")
+
+    def _show_configuration(self) -> None:
+        from src.ui.terminal import clear_screen
+
+        clear_screen()
+        settings = self.config.read_settings()
+        print("=== CONFIGURATION ===")
+        print(json.dumps(settings, indent=4))
+        input("\nPress Enter to return to the menu...")

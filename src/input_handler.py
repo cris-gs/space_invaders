@@ -30,6 +30,12 @@ class InputHandler:
         return key == action_key
 
     def _on_press(self, key) -> None:
+        if key == keyboard.Key.esc:
+            action_method = getattr(self.game_actions, "open_menu", None)
+            if action_method:
+                action_method("press")
+            return
+
         for action, action_key in self.bindings.items():
             if self._match_key(key, action_key):
                 action_method = getattr(self.game_actions, action, None)
@@ -37,9 +43,6 @@ class InputHandler:
                     action_method("press")
 
     def _on_release(self, key) -> None:
-        if key == keyboard.Key.esc:
-            return False
-
         for action, action_key in self.bindings.items():
             if self._match_key(key, action_key):
                 action_method = getattr(self.game_actions, action, None)

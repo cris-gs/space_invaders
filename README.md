@@ -17,7 +17,16 @@ A terminal Space Invaders game built with Python.
 
 - `W`, `A`, `S`, `D`: move the player.
 - `Space`: shoot.
-- `Esc`: quit.
+- `Esc`: open the pause menu.
+
+## Pause Menu
+
+From the pause menu you can:
+
+- Resume the game.
+- View a short match summary.
+- Open the current configuration.
+- Exit the game.
 
 ## Run
 
