@@ -4,8 +4,7 @@
         "move_down": "s",
         "move_left": "a",
         "move_right": "d",
-        "shoot": "space",
-        "exit": "esc"
+        "shoot": "space"
     },
     "volume": {
         "master": 0.5,
@@ -18,8 +17,7 @@
             "move_down": "s",
             "move_left": "a",
             "move_right": "d",
-            "shoot": "space",
-            "exit": "esc"
+            "shoot": "space"
         },
         "volume": {
             "master": 0.5,
